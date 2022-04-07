@@ -1,0 +1,182 @@
+You might have seen a timer on some web sites or at least on your phone. We are also going to create a wonderful timer ourselves.
+The counter starts from zero and ends at some number which the user enters in the input. The input only takes a number.
+We will create a small counter, for now, that can only go from one to nine. Handle all the possible cases when the 'Start Counter' button can be clicked.
+
+HTML PART~
+
+<html><head>
+    <title>Up Counter</title>
+</head>
+
+<body>
+    <div id="counter-value">
+        <p>Enter Value From 1 and 9</p>
+        <div id="input-range">
+            <input type="number" id="number" placeholder="Enter Number">
+            <button onclick="startCounter()">Start Counter</button>
+        </div>
+    </div>
+
+    <div id="counter-container">
+        <div class="counter" id="first">
+            <p class="current">0</p>
+            <p class="next">1</p>
+        </div>
+    </div>
+
+
+</body></html>
+
+
+CSS APRT~
+
+body {
+    background-color: #d8f8ff;
+    font-family: sans-serif;
+    margin: 50px;
+}
+
+#counter-value {
+    padding: 40px 0;
+    margin: 50px 0;
+    background-image: linear-gradient(45deg, #a4f2f2, #efa7d7);
+    text-align: center;
+}
+
+#counter-value p {
+    color:white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem;
+    word-spacing: 1rem;
+}
+
+#input-range {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 50px;
+}
+
+#input-range input {
+    padding: 10px;
+    width: 30%;
+    font-size: 1rem;
+}
+
+#input-range button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0px 5px 20px white;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+
+
+#counter-container {
+    background-color: #555555;
+    height: 200px;
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.counter {
+    display: inline-block;
+    background-color: aliceblue;
+    width: 15%;
+    max-width: 80px;
+    height: 80px;
+    margin: auto 10px;
+    box-shadow: 0px 0px 5px white;
+    position: relative;
+    overflow: hidden;
+}
+
+.counter p {
+    font-size: 3rem;
+    text-align: center;
+    margin: 0;
+    width: 100%;
+    line-height: 80px;
+    border-top: 2px solid black;
+    background-color: aliceblue;
+}
+
+p.next {
+    position: absolute;
+    top: 80px;
+}
+
+p.animate {
+    transition-duration: 0.5s;
+    top: 0px;
+}
+
+
+JAVASCRIPT PART~
+
+var countInterval;
+
+
+function startCounter() {
+
+    var number = parseInt(document.getElementById("number").value);
+
+    if (isNaN(number)) {
+        alert("Please enter a number");
+        clearInterval(countInterval);   // This is important for the condition when a counter is running and you entered a wrong input for a new counter
+        return;
+    }
+    if (number < 1 || number > 9) {
+        alert("Range out of bounds");
+        clearInterval(countInterval);
+        return;
+    }
+
+    var currentNo = document.querySelector(".counter .current");
+    var nextNo = document.querySelector(".counter .next");
+    var count = 0;
+
+    // If user clicks on 'Start Counter' button again - remove this function and below 2 lines if you don't consider this situation
+    resetNumbers(currentNo, nextNo);
+    
+    // Clears the previous interval that was running
+    clearInterval(countInterval);
+
+    countInterval = setInterval(function () {
+        if (count === number) {
+            clearInterval(countInterval);
+            alert("Counter has stopped");
+            return;
+        }
+        increaseCount(currentNo, nextNo);
+        count++;
+    }, 1000);
+
+}
+
+
+
+function resetNumbers(currentNo, nextNo, end) {
+    currentNo.innerText = 0;
+    nextNo.innerText = 1;
+}
+
+
+
+function increaseCount(currentNo, nextNo) {
+
+    nextNo.classList.add("animate");
+
+    setTimeout(function () {
+        currentNo.innerText = nextNo.innerText;
+        nextNo.classList.remove("animate");
+        nextNo.innerText = parseInt(nextNo.innerText) + 1;
+    }, 500);
+
+}
